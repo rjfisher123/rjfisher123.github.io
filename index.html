@@ -67,9 +67,9 @@
   <h1>Welcome to FuggerBot Alerts</h1>
   <p>By entering your phone number, you consent to receive SMS alerts from FuggerBot. Msg &amp; data rates may apply. Text STOP to opt out.</p>
 
-  <form>
+  <form id="optin-form">
     <label for="phone">Phone Number:</label>
-    <input type="text" id="phone" name="phone" placeholder="+1-555-555-5555" />
+    <input type="text" id="phone" name="phone" placeholder="+1-555-555-5555" required />
     <input type="submit" value="Subscribe" />
   </form>
 
@@ -79,5 +79,6 @@
     and
     <a href="https://rjfisher123.github.io/fuggerbot-optin/terms.html" target="_blank">Terms & Conditions</a>.
   </div>
+  <script src="submit.js"></script>
 </body>
 </html>
