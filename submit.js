@@ -1,6 +1,13 @@
 document.getElementById('optin-form').addEventListener('submit', function (e) {
-  e.preventDefault(); // Prevent form from submitting normally
+  e.preventDefault();
   const phone = document.getElementById('phone').value;
-  alert(`Thanks! We'll text you at: ${phone}`);
-  // Future: Send to backend API or service
+
+  const confirmation = document.createElement('p');
+  confirmation.textContent = `✅ Thanks! We'll text you at: ${phone}`;
+  confirmation.style.color = 'green';
+
+  const form = document.getElementById('optin-form');
+  form.parentNode.insertBefore(confirmation, form.nextSibling);
+
+  form.reset(); // Optional: clears the input field
 });
