@@ -4,29 +4,18 @@ document.addEventListener("DOMContentLoaded", function () {
   const phoneInput = document.getElementById("phone");
 
   function normalizeNumber(input) {
-    // Remove common separators and letters
-    const digits = input.replace(/[^\d+]/g, "");
-    // If it starts with "+" keep it; otherwise remove leading zeros
-    return digits;
+    return input.replace(/[^\d]/g, "");
   }
 
   function isPlausiblePhone(n) {
-    // Accept numbers with 10-15 digits (allow leading +)
-    const stripped = n.replace(/[^\d]/g, "");
-    return stripped.length >= 10 && stripped.length <= 15;
+    return n.length >= 10 && n.length <= 15;
   }
 
   function prettyFormat(n) {
-    // Very small formatting: keep + if present, otherwise show grouped digits
-    if (!n) return n;
-    if (n.startsWith("+")) {
-      return n;
+    if (n.length === 10) {
+      return `+1 ${n.slice(0, 3)}-${n.slice(3, 6)}-${n.slice(6)}`;
     }
-    const s = n.replace(/[^\d]/g, "");
-    if (s.length === 10) {
-      return `+1 ${s.slice(0,3)}-${s.slice(3,6)}-${s.slice(6)}`;
-    }
-    return `+${s}`;
+    return `+${n}`;
   }
 
   if (!form || !confirmation || !phoneInput) {
@@ -38,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault(); // prevent page reload
 
     const raw = phoneInput.value || "";
-    const normalized = normalizeNumber(raw);
+    const normalized = normalizeNumber(raw); // only digits now
 
     if (!normalized) {
       confirmation.textContent = "⚠️ Please enter a phone number.";
@@ -64,10 +53,26 @@ document.addEventListener("DOMContentLoaded", function () {
     // clear the form
     form.reset();
 
-    // TODO: send to backend via fetch() when endpoint available
-    // fetch('/subscribe', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({phone: normalized}) })
-    //   .then(...)
-    //   .catch(...);
+    fetch("https://fuggerbot-alerts-server.fly.dev/subscribe", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ phone: normalized })
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("Network response was not ok.");
+      return response.json();
+    })
+    .then(data => {
+      console.log("✅ Successfully subscribed:", data);
+    })
+    .catch(error => {
+      console.error("❌ Failed to subscribe:", error);
+      confirmation.textContent = "⚠️ Something went wrong. Please try again later.";
+      confirmation.style.display = "block";
+      confirmation.style.color = "#dc3545";
+    });
 
   });
 });
