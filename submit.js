@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function isPlausiblePhone(n) {
-    return n.length >= 10 && n.length <= 15;
+    // Accepts numbers with 10 to 15 digits starting with a non-zero digit
+    return /^[1-9]\d{9,14}$/.test(n);
   }
 
   function prettyFormat(n) {
@@ -28,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const raw = phoneInput.value || "";
     const normalized = normalizeNumber(raw); // only digits now
+    console.log("Normalized:", normalized);
 
     if (!normalized) {
       confirmation.textContent = "⚠️ Please enter a phone number.";
