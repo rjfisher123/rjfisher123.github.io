@@ -32,28 +32,14 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("Normalized:", normalized);
 
     if (!normalized) {
-      confirmation.textContent = "⚠️ Please enter a phone number.";
-      confirmation.style.display = "block";
-      confirmation.style.color = "#dc3545";
+      console.warn("Invalid phone number input.");
       return;
     }
 
     if (!isPlausiblePhone(normalized)) {
-      confirmation.textContent = "⚠️ Please enter a valid phone number (include country code or 10-digit US number).";
-      confirmation.style.display = "block";
-      confirmation.style.color = "#dc3545";
+      console.warn("Invalid phone number input.");
       return;
     }
-
-    const pretty = prettyFormat(normalized);
-
-    // show confirmation
-    confirmation.textContent = `✅ Thanks! We'll text you updates at ${pretty}`;
-    confirmation.style.display = "block";
-    confirmation.style.color = "#28a745";
-
-    // clear the form
-    form.reset();
 
     fetch("https://fuggerbot-alerts-server.fly.dev/subscribe", {
       method: "POST",
@@ -68,6 +54,11 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then(data => {
       console.log("✅ Successfully subscribed:", data);
+      const pretty = prettyFormat(normalized);
+      confirmation.textContent = `✅ Thanks! We'll text you updates at ${pretty}`;
+      confirmation.style.display = "block";
+      confirmation.style.color = "#28a745";
+      form.reset();
     })
     .catch(error => {
       console.error("❌ Failed to subscribe:", error);
