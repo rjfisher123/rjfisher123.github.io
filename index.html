@@ -1,51 +1,3 @@
-form.addEventListener("submit", function (event) {
-  event.preventDefault();
-
-  const phoneInput = document.getElementById("phone");
-  const confirmation = document.getElementById("confirmation");
-  let phone = phoneInput.value.trim();
-
-  // Normalize by stripping non-digit characters
-  const normalized = phone.replace(/\D/g, "");
-  console.log("Normalized:", normalized);
-
-  // Basic validation (10+ digits)
-  if (!normalized || normalized.length < 10) {
-    confirmation.textContent = "⚠️ Please enter a valid phone number.";
-    confirmation.style.display = "block";
-    confirmation.style.color = "#dc3545";
-    return;
-  }
-
-  // Clear alert before fetch
-  confirmation.textContent = "";
-  confirmation.style.display = "none";
-
-  fetch("https://fuggerbot-alerts-server.fly.dev/subscribe", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ phone: normalized })
-  })
-    .then(response => {
-      if (!response.ok) throw new Error("Network response was not ok.");
-      return response.json();
-    })
-    .then(data => {
-      console.log("✅ Successfully subscribed:", data);
-      confirmation.textContent = "✅ Subscribed successfully!";
-      confirmation.style.display = "block";
-      confirmation.style.color = "#28a745";
-      form.reset();
-    })
-    .catch(error => {
-      console.error("❌ Failed to subscribe:", error);
-      confirmation.textContent = "⚠️ Something went wrong. Please try again later.";
-      confirmation.style.display = "block";
-      confirmation.style.color = "#dc3545";
-    });
-});
 <footer style="text-align: center; font-size: 0.9em; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; color: #555;">
   <p>
     FuggerBot Alerts | Operated by Ryan Fisher<br>
@@ -53,3 +5,4 @@ form.addEventListener("submit", function (event) {
     View our <a href="https://rjfisher123.github.io/privacy.html" target="_blank">Privacy Policy</a> and <a href="https://rjfisher123.github.io/terms.html" target="_blank">Terms & Conditions</a>
   </p>
 </footer>
+<script src="submit.js"></script>
